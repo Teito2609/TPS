@@ -1,3 +1,19 @@
+def buscar_patrones():
+    
+
+
+def cargar_texto():
+    """Ingresa un archivo y lo guarda en texto."""
+    archivo = input("Ingrese el nombre del archivo a cargar: ")
+    with open(archivo, "r") as f:
+        texto = f.read()
+    return texto
+
+def analizar_texto(texto):
+    """Analiza el texto proporcionado."""
+    
+    pass
+
 def main():
     
     print("============================")
@@ -10,9 +26,9 @@ def main():
         opcion = int(input("Ingrese una opción: "))
     
         if opcion == 1:
-            cargar_texto()
+            texto = cargar_texto()
         elif opcion == 2:
-            analizar_texto()
+            analizar_texto(texto)
         elif opcion == 3:
             buscar_patrones()
         elif opcion == 4:
