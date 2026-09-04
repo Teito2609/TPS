@@ -1,7 +1,9 @@
 diccionario_palabras_claves = {
     "proovedor" : ["proveedor", "proveedora", "proveedores", "proveedoras"],
     "cliente" : ["cliente", "clientes", "clienta", "clientas"],
-    "Reu"
+    "Reunión" : ["reunión", "reunion", "reuniones", "reunions"],
+    "Urgente" : ["urgente", "urgentes", "urgencia", "urgencias"],
+    
 }
 
 def main():
