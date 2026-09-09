@@ -83,7 +83,12 @@ def cargar_mails_ejemplo():
 def guardar_y_analizar_mail():
     """Ingresa el mail, analiza su contenido y almacena la información relevante."""
 
-    contenido = input("Ingrese el mail: ")
+    contenido = input("Ingrese el mail o 0 para salir: ")
+    while not contenido.strip():
+        print("El mail no puede estar vacío. Intente nuevamente.")
+        contenido = input("Ingrese el mail: ")
+    if contenido == "0":
+        return
 
     id_mail = len(mails) + 1
 
@@ -218,7 +223,7 @@ def almacen_mails():
         else:
             print("\nID no válido.")
 
-        opcion = input("\nIngrese el ID del mail que desea ver (o '0' para salir): ")
+        opcion = int(input("\nIngrese el ID del mail que desea ver (o '0' para salir): "))
 
 def comparar_clientes_productos():
     print("Función comparar clientes y productos")
