@@ -3,6 +3,81 @@ clientes = []
 urgentes = []
 reuniones = []
 
+diccionario_urgente = {
+    "urgente": True,
+    "urgencia": True,
+    "inmediato": True,
+    "inmediata": True,
+    "prioridad": True
+}
+
+diccionario_reunion = {
+    "reunión": True,
+    "reunion": True,
+    "junta": True,
+    "encuentro": True,
+    "videollamada": True
+}
+diccionario_cliente = {
+    "cliente": True,
+    "compra": True,
+    "pedido": True,
+    "presupuesto": True,
+    "cotización": True,
+    "cotizacion": True
+}
+diccionario_hora = {
+    "hora": True,
+    "horario": True,
+    "las": True
+}
+diccionario_empleados = {
+    "empleados": True,
+    "con": True,
+    "participantes": True,
+    "colaboradores": True
+}
+diccionario_producto = {
+    "producto": True,
+    "productos": True,
+    "artículo": True,
+    "articulos": True,
+    "mercancía": True
+}
+diccionario_precio = {
+    "precio": True,
+    "costo": True
+}
+
+mails_ejemplo = [
+    {
+        "id": 1,
+        "remitente": "juan@gmail.com",
+        "asunto": "Pedido urgente de productos",
+        "tipo": "cliente",
+        "contenido": "De: juan@gmail.com \nAsunto: Pedido urgente de productos \n\nHola, \n\nSoy Juan Pérez de la empresa ABC. \n\nNecesitamos 20 unidades de teclado y 10 unidades de mouse. \nEl precio total es de $150000. \n\nNecesitamos recibir el pedido el 15/09/2026. \n\nSaludos."
+    },
+    {
+        "id": 2,
+        "remitente": "ana@empresa.com",
+        "asunto": "Reunión de equipo",
+        "tipo": "reunión",
+        "contenido": "De: ana@empresa.com \nAsunto: Reunión de equipo \n\nHola, \n\nNos juntamos mañana a las 10:00 AM con Joaquin y Romero para discutir el proyecto. \n\nSaludos."
+    },
+    {
+        "id": 3,
+        "remitente": "soporte@empresa.com",
+        "asunto": "Servidor detenido",
+        "tipo": "urgente",
+        "contenido": "De: soporte@empresa.com \nAsunto: Servidor detenido \n\nEste problema es urgente y necesita atención inmediata. \n\nSaludos."
+    }
+]
+
+
+def cargar_mails_ejemplo():
+    for mail in mails_ejemplo:
+        mails.append(mail.copy())
+
 
 
 def guardar_y_analizar_mail():
@@ -28,11 +103,11 @@ def guardar_y_analizar_mail():
             indice_asunto = palabras.index(palabra) + 1
             asunto = palabras[indice_asunto]
 
-        if palabra == "urgente":
+        if palabra in diccionario_urgente and not palabra in diccionario_reunion and not palabra in diccionario_cliente:
             es_urgente = True
             tipo = "urgente"
 
-        if palabra == "reunión":
+        if palabra in diccionario_reunion:
             es_reunion = True
             tipo = "reunión"
             
@@ -41,16 +116,16 @@ def guardar_y_analizar_mail():
             else:
                 fecha = ""
             
-            if "hora:" in palabras:
-                indice_hora = palabras.index("hora:") + 1
+            if palabra in diccionario_hora:
+                indice_hora = palabras.index(palabra) + 1
                 hora = palabras[indice_hora]
             
-            if "empleados:" in palabras:
-                indice_empleados = palabras.index("empleados:") + 1
+            if palabra in diccionario_empleados:
+                indice_empleados = palabras.index(palabra) + 1
                 empleados = []
                 empleados.append(palabras[indice_empleados])
             
-        if palabra == "cliente":
+        if palabra in diccionario_cliente:
             es_cliente = True
             tipo = "cliente"  
         
@@ -59,17 +134,13 @@ def guardar_y_analizar_mail():
             else:
                 fecha = ""
             
-            if "producto:" in palabras:
-                indice_producto = palabras.index("producto:") + 1
+            if palabra in diccionario_producto:
+                indice_producto = palabras.index(palabra) + 1
                 producto = palabras[indice_producto]
             
-            if "precio:" in palabras:
-                indice_precio = palabras.index("precio:") + 1
+            if palabra in diccionario_precio:
+                indice_precio = palabras.index(palabra) + 1
                 precio = float(palabras[indice_precio])
-            
-            if "hora:" in palabras:
-                indice_hora = palabras.index("hora:") + 1
-                hora = palabras[indice_hora]
             
             cliente = remitente.split("@")[0]  # Extrae el nombre del cliente del remitente
 
@@ -214,4 +285,5 @@ def main():
             print("\nOpción inválida. Intente nuevamente.")
 
 
+cargar_mails_ejemplo()
 main()
