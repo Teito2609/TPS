@@ -209,8 +209,8 @@ def almacen_mails():
         print(f"Asunto: {mail['asunto']}")
         print(f"Tipo: {mail['tipo']}")
 
-    opcion = input("\nIngrese el ID del mail que desea ver (o '0' para salir): ")
-    while opcion != "0":
+    opcion = int(input("\nIngrese el ID del mail que desea ver (o '0' para salir): "))
+    while opcion != 0:
         mail_seleccionado = None
         for mail in mails:
             if mail['id'] == opcion:
@@ -265,25 +265,25 @@ def main():
         print("0. Salir")
         print("=" * 45)
 
-        opcion = input("Seleccione una opción: ")
+        opcion = int(input("Seleccione una opción: "))
 
-        if opcion == "1":
+        if opcion == 1:
             guardar_y_analizar_mail()
-        elif opcion == "2":
+        elif opcion == 2:
             almacen_mails()
-        elif opcion == "3":
+        elif opcion == 3:
             comparar_clientes_productos()
-        elif opcion == "4":
+        elif opcion == 4:
             ver_urgentes()
-        elif opcion == "5":
+        elif opcion == 5:
             ver_reuniones()
-        elif opcion == "6":
+        elif opcion == 6:
             ver_pendientes()
-        elif opcion == "7":
+        elif opcion == 7:
             administrar_almacenamiento()
-        elif opcion == "8":
+        elif opcion == 8:
             resumen_general()
-        elif opcion == "0":
+        elif opcion == 0:
             print("\nSaliendo del sistema...")
             break
         else:
