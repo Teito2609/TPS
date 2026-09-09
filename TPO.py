@@ -32,7 +32,7 @@ def guardar_y_analizar_mail():
             es_urgente = True
             tipo = "urgente"
 
-        elif palabra == "reunión":
+        if palabra == "reunión":
             es_reunion = True
             tipo = "reunión"
             
@@ -45,7 +45,12 @@ def guardar_y_analizar_mail():
                 indice_hora = palabras.index("hora:") + 1
                 hora = palabras[indice_hora]
             
-        elif palabra == "cliente":
+            if "empleados:" in palabras:
+                indice_empleados = palabras.index("empleados:") + 1
+                empleados = []
+                empleados.append(palabras[indice_empleados])
+            
+        if palabra == "cliente":
             es_cliente = True
             tipo = "cliente"  
         
@@ -96,7 +101,8 @@ def guardar_y_analizar_mail():
             "asunto": mail["asunto"],
             "hora": hora,
             "fecha": fecha,
-            "empleados": []
+            "urgente": es_urgente,
+            "empleados": empleados
         }
 
         reuniones.append(reunion)
@@ -118,8 +124,30 @@ def guardar_y_analizar_mail():
     print("\nMail guardado correctamente.")
 
 def almacen_mails():
-    print("Función almacén de mails")
+    """Podes ingresar a todos los mails y ver su contenido"""
+    
+    for mail in mails:
+        print("\n" + "-" * 45)
+        print(f"\nID: {mail['id']}")
+        print(f"Remitente: {mail['remitente']}")
+        print(f"Asunto: {mail['asunto']}")
+        print(f"Tipo: {mail['tipo']}")
 
+    opcion = input("\nIngrese el ID del mail que desea ver (o '0' para salir): ")
+    while opcion != "0":
+        mail_seleccionado = None
+        for mail in mails:
+            if mail['id'] == opcion:
+                mail_seleccionado = mail
+                break
+
+        if mail_seleccionado:
+            print(f"\nContenido del mail ID {mail_seleccionado['id']}:")
+            print(mail_seleccionado['contenido'])
+        else:
+            print("\nID no válido.")
+
+        opcion = input("\nIngrese el ID del mail que desea ver (o '0' para salir): ")
 
 def comparar_clientes_productos():
     print("Función comparar clientes y productos")
