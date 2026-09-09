@@ -44,10 +44,6 @@ diccionario_producto = {
     "articulos": True,
     "mercancía": True
 }
-diccionario_precio = {
-    "precio": True,
-    "costo": True
-}
 
 mails_ejemplo = [
     {
@@ -55,21 +51,21 @@ mails_ejemplo = [
         "remitente": "juan@gmail.com",
         "asunto": "Pedido urgente de productos",
         "tipo": "cliente",
-        "contenido": "De: juan@gmail.com \nAsunto: Pedido urgente de productos \n\nHola, \n\nSoy Juan Pérez de la empresa ABC. \n\nNecesitamos 20 unidades de teclado y 10 unidades de mouse. \nEl precio total es de $150000. \n\nNecesitamos recibir el pedido el 15/09/2026. \n\nSaludos."
+        "contenido": "Remitente: juan@gmail.com \nAsunto: Pedido urgente de productos \n\nHola, \n\nSoy Juan Pérez de la empresa ABC. \n\nNecesitamos 20 unidades de teclado y 10 unidades de mouse. \nEl precio total es de $150000. \n\nNecesitamos recibir el pedido el 15/09/2026. \n\nSaludos."
     },
     {
         "id": 2,
         "remitente": "ana@empresa.com",
         "asunto": "Reunión de equipo",
         "tipo": "reunión",
-        "contenido": "De: ana@empresa.com \nAsunto: Reunión de equipo \n\nHola, \n\nNos juntamos mañana a las 10:00 AM con Joaquin y Romero para discutir el proyecto. \n\nSaludos."
+        "contenido": "Remitente: ana@empresa.com \nAsunto: Reunión de equipo \n\nHola, \n\nNos juntamos mañana a las 10:00 AM con Joaquin y Romero para discutir el proyecto. \n\nSaludos."
     },
     {
         "id": 3,
         "remitente": "soporte@empresa.com",
         "asunto": "Servidor detenido",
         "tipo": "urgente",
-        "contenido": "De: soporte@empresa.com \nAsunto: Servidor detenido \n\nEste problema es urgente y necesita atención inmediata. \n\nSaludos."
+        "contenido": "Remitente: soporte@empresa.com \nAsunto: Servidor detenido \n\nEste problema es urgente y necesita atención inmediata. \n\nSaludos."
     }
 ]
 
@@ -79,21 +75,44 @@ def cargar_mails_ejemplo():
         mails.append(mail.copy())
 
 
+def ingresar_mail_completo():
+    """Permite ingresar un mail de varias líneas y finalizarlo con FIN."""
+    print("Ingrese el mail línea por línea. Escriba FIN en una línea nueva para terminar.")
+    lineas = []
+
+    while True:
+        linea = input()
+        if linea == "FIN":
+            break
+        lineas.append(linea)
+
+    return "\n".join(lineas)
+
+
 
 def guardar_y_analizar_mail():
     """Ingresa el mail, analiza su contenido y almacena la información relevante."""
 
-    contenido = input("Ingrese el mail o 0 para salir: ")
-    while not contenido.strip():
+    contenido = ingresar_mail_completo()
+    if contenido.strip() == "0":
+        return
+    if not contenido.strip():
         print("El mail no puede estar vacío. Intente nuevamente.")
-        contenido = input("Ingrese el mail: ")
-    if contenido == "0":
         return
 
     id_mail = len(mails) + 1
 
     palabras = contenido.lower().split()
 
+    remitente = "No informado"
+    asunto = "No informado"
+    tipo = "general"
+    cliente = "No informado"
+    producto = "No informado"
+    precio = 0
+    fecha = "No informada"
+    hora = "No informada"
+    empleados = []
     es_urgente = False
     es_reunion = False
     es_cliente = False
@@ -103,6 +122,7 @@ def guardar_y_analizar_mail():
         if palabra == "remitente:":
             indice_remitente = palabras.index(palabra) + 1
             remitente = palabras[indice_remitente]
+            cliente = remitente.split("@")[0]  # Extrae el nombre del cliente del remitente
                 
         if palabra == "asunto:":
             indice_asunto = palabras.index(palabra) + 1
@@ -143,11 +163,9 @@ def guardar_y_analizar_mail():
                 indice_producto = palabras.index(palabra) + 1
                 producto = palabras[indice_producto]
             
-            if palabra in diccionario_precio:
-                indice_precio = palabras.index(palabra) + 1
-                precio = float(palabras[indice_precio])
-            
-            cliente = remitente.split("@")[0]  # Extrae el nombre del cliente del remitente
+            if "$" in palabra:
+                precio_texto = palabra.replace("$", "").rstrip(".")
+                precio = float(precio_texto)
 
     mail = {
         "id": id_mail,
