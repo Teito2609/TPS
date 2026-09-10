@@ -108,7 +108,7 @@ def guardar_y_analizar_mail():
     asunto = "No informado"
     tipo = "general"
     cliente = "No informado"
-    producto = "No informado"
+    producto = []
     precio = 0
     fecha = "No informada"
     hora = "No informada"
@@ -145,11 +145,6 @@ def guardar_y_analizar_mail():
                 indice_hora = palabras.index(palabra) + 1
                 hora = palabras[indice_hora]
             
-            if palabra in diccionario_empleados:
-                indice_empleados = palabras.index(palabra) + 1
-                empleados = []
-                empleados.append(palabras[indice_empleados])
-            
         if palabra in diccionario_cliente:
             es_cliente = True
             tipo = "cliente"  
@@ -159,13 +154,44 @@ def guardar_y_analizar_mail():
             else:
                 fecha = ""
             
-            if palabra in diccionario_producto:
-                indice_producto = palabras.index(palabra) + 1
-                producto = palabras[indice_producto]
-            
             if "$" in palabra:
                 precio_texto = palabra.replace("$", "").rstrip(".")
                 precio = float(precio_texto)
+
+    productos_encontrados = []
+    for indice, palabra in enumerate(palabras):
+        if (
+            palabra.isdigit()
+            and indice + 3 < len(palabras)
+            and palabras[indice + 1].rstrip(".,") in ("unidad", "unidades")
+            and palabras[indice + 2] == "de"
+        ):
+            producto = palabras[indice + 3].rstrip(".,")
+            productos_encontrados.append(producto)
+
+    if productos_encontrados:
+        producto = productos_encontrados
+    else:
+        producto = ["No informado"]
+
+    empleados_encontrados = []
+    palabras_que_finalizan_empleados = {
+        "para", "sobre", "acerca", "discutir", "tratar", "hablar"
+    }
+
+    for indice, palabra in enumerate(palabras):
+        if palabra in diccionario_empleados:
+            indice_empleado = indice + 1
+            while indice_empleado < len(palabras):
+                empleado = palabras[indice_empleado].rstrip(".,")
+                if empleado in palabras_que_finalizan_empleados:
+                    break
+                if empleado != "y":
+                    empleados_encontrados.append(empleado)
+                indice_empleado += 1
+
+    if empleados_encontrados:
+        empleados = empleados_encontrados
 
     mail = {
         "id": id_mail,
