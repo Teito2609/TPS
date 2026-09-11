@@ -272,8 +272,132 @@ def almacen_mails():
         opcion = int(input("\nIngrese el ID del mail que desea ver (o '0' para salir): "))
 
 def comparar_clientes_productos():
-    print("Función comparar clientes y productos")
+    while True:
+        print("\n--- Comparar Clientes y Productos ---")
+        print("1. Comparar clientes")
+        print("2. Comparar productos")
+        print("3. Productos más solicitados")
+        print("4. Clientes más frecuentes")
+        print("5. Clientes con más reclamos")
+        print("0. Salir")
+        
+        opcion = input("Elija una opción: ")
 
+        if opcion == "0":
+            break
+
+        elif opcion == "1":
+            if len(clientes) == 0:
+                print("No hay clientes guardados.")
+            else:
+
+                print("\nLista de clientes disponibles:")
+                for c in clientes:
+                    print(f"ID: {c['id']} - Cliente: {c['cliente']} - Precio: ${c['precio']}")
+
+                ids_ingresados = input("\nIngrese los IDs a comparar separados por coma: ")
+                lista_ids = ids_ingresados.split(",")
+
+                print("\nResultado de la comparación:")
+                for id in lista_ids:
+                    id_limpio = id.strip()
+                    if id_limpio.isdigit():
+                        id_num = int(id_limpio)
+                        encontrado = False
+                        for c in clientes:
+                            if c["id"] == id_num:
+                                print(f"ID: {c['id']} | Cliente: {c['cliente']} | Productos: {c['producto']} | Total: ${c['precio']} | Fecha: {c['fecha']}")
+                                encontrado = True
+                                break
+                        if not encontrado:
+                            print(f"ID {id_num}: No encontrado.")
+
+        elif opcion == "2":
+            if len(clientes) == 0:
+                print("No hay pedidos guardados.")
+            else:
+
+                prod_ingresados = input("Ingrese los productos a comparar separados por coma: ")
+                lista_productos = prod_ingresados.split(",")
+
+                print("\nResultado:")
+                for p in lista_productos:
+                    nombre = p.strip().lower()
+                    pedidos = 0
+                    ingresos = 0
+                    for c in clientes:
+                        productos_cliente = [item.lower() for item in c["producto"]]
+                        if nombre in productos_cliente:
+                            pedidos += 1
+                            ingresos += c["precio"]
+                    print(f"Producto: {nombre} | Pedidos: {pedidos} | Ingresos totales: ${ingresos}")
+
+        elif opcion == "3":
+            if len(clientes) == 0:
+                print("No hay pedidos guardados.")
+                continue
+
+            productos_unicos = []
+            for c in clientes:
+                for p in c["producto"]:
+                    nombre = p.lower()
+                    if nombre != "no informado" and nombre not in productos_unicos:
+                        productos_unicos.append(nombre)
+
+            resumen = []
+            for p in productos_unicos:
+                cantidad = 0
+                ingresos = 0
+                for c in clientes:
+                    productos_cliente = [item.lower() for item in c["producto"]]
+                    if p in productos_cliente:
+                        cantidad += 1
+                        ingresos += c["precio"]
+                resumen.append({"producto": p, "cantidad": cantidad, "ingresos": ingresos})
+
+            for i in range(len(resumen) - 1):
+                for k in range(i + 1, len(resumen)):
+                    if resumen[k]["cantidad"] > resumen[i]["cantidad"]:
+                        aux = resumen[i]
+                        resumen[i] = resumen[k]
+                        resumen[k] = aux
+
+            print("\nProductos más solicitados:")
+            for item in resumen:
+                print(f"Producto: {item['producto']} | Cantidad: {item['cantidad']} | Ingresos: ${item['ingresos']}")
+
+        elif opcion == "4":
+            if len(clientes) == 0:
+                print("No hay clientes guardados.")
+                continue
+            conteo_clientes = []
+            for c in clientes:
+                nombre = c["cliente"]
+                encontrado = False
+                for item in conteo_clientes:
+                    if item["cliente"] == nombre:
+                        item["compras"] += 1
+                        encontrado = True
+                        break
+                if not encontrado:
+                    conteo_clientes.append({"cliente": nombre, "compras": 1})
+
+            for i in range(len(conteo_clientes) - 1):
+                for k in range(i + 1, len(conteo_clientes)):
+                    if conteo_clientes[k]["compras"] > conteo_clientes[i]["compras"]:
+                        aux = conteo_clientes[i]
+                        conteo_clientes[i] = conteo_clientes[k]
+                        conteo_clientes[k] = aux
+
+            print("\nClientes más frecuentes:")
+            for item in conteo_clientes:
+                print(f"Cliente: {item['cliente']} | Compras: {item['compras']}")
+
+        else:
+            print("Opción inválida. Intente de nuevo.")
+
+        opcion = input(f"\n1. Comparar clientes\n2. Comparar productos\n 3.Productos mas solicitados \n 4. Clientes mas frecuentes\n5 clientes con mas reclamos\n 0. Salir\n")
+    
 
 def ver_urgentes():
     salir = " "
@@ -370,11 +494,257 @@ def ver_pendientes():
             salir = input("Entrada inválida. Presione enter para salir: ")
 
 def administrar_almacenamiento():
-    print("Función administrar almacenamiento")
+    """Menú para administrar el almacenamiento de los mails e información extraída."""
+    
+    while True:
+        print("\n" + "═" * 8 + " ADMINISTRAR ALMACENAMIENTO " + "═" * 8)
+        print("1. Eliminar mail")
+        print("2. Eliminar información de un mail")
+        print("3. Eliminar mail + información")
+        print("4. Eliminar mails antiguos")
+        print("5. Ver espacio / cantidad de información")
+        print("6. Volver")
+
+        opcion = int(input("\n¿Qué desea hacer?: "))
+
+        # Opciones de eliminación individual (1, 2, 3)
+        if opcion == 1 or opcion == 2 or opcion == 3:
+            id_ingresado = input("Ingrese ID: ")
+            
+            # Validamos estrictamente si lo ingresado son solo dígitos numéricos
+            if not id_ingresado.isdigit():
+                print("\nID no válido. Debe ingresar un número entero.")
+                continue
+                
+            id_buscar = int(id_ingresado)
+
+            # Verificamos si el mail existe antes de continuar
+            mail_existe = False
+            for mail in mails:
+                if mail["id"] == id_buscar:
+                    mail_existe = True
+                    break
+
+            if not mail_existe and (opcion == 1 or opcion == 3):
+                print(f"\nNo se encontró ningún mail con el ID {id_buscar}.")
+                continue
+
+            # Advertencia de seguridad
+            print("\n⚠ ADVERTENCIA")
+            print(f"Está a punto de eliminar el mail ID {id_buscar}.")
+            if opcion == 2 or opcion == 3:
+                print("Esta acción puede eliminar información extraída asociada al correo.")
+            
+            confirmacion = input("\n¿Está seguro?\n1. Sí\n2. No\nSeleccione: ")
+
+            if confirmacion == "1":
+                # 1. Eliminar solamente el mail original
+                if opcion == 1 or opcion == 3:
+                    for mail in mails:
+                        if mail["id"] == id_buscar:
+                            mails.remove(mail)
+                            break
+                            
+                # 2. Eliminar solamente la información
+                if opcion == 2 or opcion == 3:
+                    # Buscamos y eliminamos en urgentes
+                    for u in urgentes:
+                        if u["id"] == id_buscar:
+                            urgentes.remove(u)
+                            break
+                    # Buscamos y eliminamos en reuniones
+                    for r in reuniones:
+                        if r["id"] == id_buscar:
+                            reuniones.remove(r)
+                            break
+                    # Buscamos y eliminamos en clientes
+                    for c in clientes:
+                        if c["id"] == id_buscar:
+                            clientes.remove(c)
+                            break
+                            
+                print("\n¡Operación completada con éxito!")
+            else:
+                print("\nOperación cancelada.")
+
+        # Opción 4: Eliminar mails antiguos
+        elif opcion == 4:
+            limite_ingresado = input("Eliminar correos con ID menor a: ")
+            
+            if not limite_ingresado.isdigit():
+                print("\nID límite no válido. Debe ingresar un número entero.")
+                continue
+                
+            limite = int(limite_ingresado)
+            
+            print("\n⚠ ADVERTENCIA")
+            print(f"Se eliminarán de forma definitiva TODOS los correos e información con ID menor a {limite}.")
+            confirmacion = input("\n¿Está seguro?\n1. Sí\n2. No\nSeleccione: ")
+            
+            if confirmacion == "1":
+                # Utilizamos un bucle while con pop() para eliminar elementos de forma segura
+                i = 0
+                while i < len(mails):
+                    if mails[i]["id"] < limite:
+                        mails.pop(i)
+                    else:
+                        i = i + 1
+                
+                # Repetimos la limpieza para las listas de información
+                for lista_info in [urgentes, reuniones, clientes]:
+                    j = 0
+                    while j < len(lista_info):
+                        if lista_info[j]["id"] < limite:
+                            lista_info.pop(j)
+                        else:
+                            j = j + 1
+                            
+                print(f"\nLimpieza completada. Correos antiguos eliminados.")
+            else:
+                print("\nOperación cancelada.")
+
+        # Opción 5: Ver espacio / cantidad
+        elif opcion == 5:
+            print("\n" + "-" * 45)
+            print("ESTADO DEL ALMACENAMIENTO")
+            print("-" * 45)
+            print(f"Total de correos guardados: {len(mails)}")
+            print(f"Correos marcados como urgentes: {len(urgentes)}")
+            print(f"Reuniones programadas: {len(reuniones)}")
+            print(f"Consultas de clientes: {len(clientes)}")
+
+        # Opción 6: Volver
+        elif opcion == 6:
+            break
+            
+        else:
+            print("\nOpción inválida. Intente nuevamente.")
 
 
 def resumen_general():
-    print("Función resumen general")
+    """Genera un panel de control con estadísticas generales de los mails."""
+    
+    total_recibidos = len(mails)
+    pedidos = 0
+    reclamos = 0
+    cotizaciones = 0
+    
+    for mail in mails:
+        # Unimos asunto y contenido para buscar palabras clave en minúscula
+        texto = (mail["asunto"] + " " + mail["contenido"]).lower()
+        if "pedido" in texto or "compra" in texto:
+            pedidos += 1
+        if "reclamo" in texto or "problema" in texto or "queja" in texto:
+            reclamos += 1
+        if "cotización" in texto or "cotizacion" in texto or "presupuesto" in texto:
+            cotizaciones += 1
+            
+    total_urgentes = len(urgentes)
+    
+    # Pendientes: contamos cuántos urgentes tienen su estado "pendiente" en True
+    total_pendientes = 0
+    for u in urgentes:
+        if u["pendiente"] == True:
+            total_pendientes += 1
+            
+    total_reuniones = len(reuniones)
+    
+    # 2. Cliente con mayor compra (Uso de listas paralelas e index)
+    nombres_c = []
+    compras_c = []
+    for c in clientes:
+        nombre = c["cliente"]
+        precio = c["precio"]
+        
+        # Si el cliente ya está en la lista, le sumamos el precio
+        if nombre in nombres_c:
+            idx = nombres_c.index(nombre)
+            compras_c[idx] += precio
+        else:
+            # Si no está, lo agregamos como nuevo
+            nombres_c.append(nombre)
+            compras_c.append(precio)
+            
+    mejor_cliente = "No hay datos"
+    if len(nombres_c) > 0:
+        max_compra = max(compras_c)
+        idx_max = compras_c.index(max_compra)
+        mejor_cliente = nombres_c[idx_max]
+        
+    # 3. Producto más solicitado
+    nombres_p = []
+    cant_p = []
+    for c in clientes:
+        prod = c["producto"]
+        if prod != "No informado":
+            if prod in nombres_p:
+                idx = nombres_p.index(prod)
+                cant_p[idx] += 1
+            else:
+                nombres_p.append(prod)
+                cant_p.append(1)
+                
+    producto_top = "No hay datos"
+    if len(nombres_p) > 0:
+        max_cant = max(cant_p)
+        idx_max = cant_p.index(max_cant)
+        producto_top = nombres_p[idx_max]
+        
+    # 4. Cliente con más reclamos
+    nombres_r = []
+    cant_r = []
+    for mail in mails:
+        texto = (mail["asunto"] + " " + mail["contenido"]).lower()
+        if "reclamo" in texto or "problema" in texto or "queja" in texto:
+            # Extraemos el nombre antes del @
+            remitente = mail["remitente"].split("@")[0]
+            if remitente in nombres_r:
+                idx = nombres_r.index(remitente)
+                cant_r[idx] += 1
+            else:
+                nombres_r.append(remitente)
+                cant_r.append(1)
+                
+    cliente_reclamos = "No hay datos"
+    if len(nombres_r) > 0:
+        max_r = max(cant_r)
+        idx_max = cant_r.index(max_r)
+        cliente_reclamos = nombres_r[idx_max]
+        
+    # 5. Próxima reunión
+    prox_reunion = "No hay reuniones programadas"
+    if len(reuniones) > 0:
+        r = reuniones[0] # Tomamos la primera de la lista
+        fecha_str = r["fecha"] if r["fecha"] else "fecha a confirmar"
+        hora_str = r["hora"] if r["hora"] else "hora a confirmar"
+        prox_reunion = f"{fecha_str} a las {hora_str}"
+
+    # 6. Imprimir el panel usando f-strings para alinear a la derecha
+    print("\n" + "═" * 8 + " RESUMEN GENERAL " + "═" * 8)
+    print(f"\nMAILS RECIBIDOS: {total_recibidos:>14}")
+    
+    print("\n" + f"PEDIDOS: {pedidos:>22}")
+    print(f"RECLAMOS: {reclamos:>21}")
+    print(f"COTIZACIONES: {cotizaciones:>17}")
+    
+    print("\n" + f"🚨 URGENTES: {total_urgentes:>17}")
+    print(f"📋 PENDIENTES: {total_pendientes:>15}")
+    print(f"📅 PRÓXIMAS REUNIONES: {total_reuniones:>7}")
+    
+    print("\n" + "-" * 32)
+    print("CLIENTE CON MAYOR COMPRA:")
+    print(mejor_cliente.title()) 
+    
+    print("\nPRODUCTO MÁS SOLICITADO:")
+    print(producto_top.capitalize())
+    
+    print("\nCLIENTE CON MÁS RECLAMOS:")
+    print(cliente_reclamos.title())
+    print("-" * 32)
+    
+    print(f"⚠ Hay {total_urgentes} asuntos urgentes")
+    print(f"⚠ Hay {total_pendientes} tareas pendientes")
+    print(f"📅 Próxima reunión: {prox_reunion}")
 
 
 def main():
