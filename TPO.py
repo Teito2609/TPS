@@ -278,11 +278,48 @@ def ver_urgentes():
 
 
 def ver_reuniones():
-    print("Función reuniones")
+    print("--- LISTA DE REUNIONES ---")
+    if not reuniones:
+        print("No hay reuniones registradas.")
+        return
 
+    for reunion in reuniones:
+        print("\n" + "-" * 45)
+        print(f"ID: {reunion['id']}")
+        print(f"Remitente: {reunion['remitente']}")
+        print(f"Asunto: {reunion['asunto']}")
+        print(f"Hora: {reunion['hora']}")
+        print(f"Fecha: {reunion['fecha']}")
+        print(f"Urgente: {'Sí' if reunion['urgente'] else 'No'}")
+        print(f"Empleados: {', '.join(reunion['empleados']) if reunion['empleados'] else 'No informado'}")
+        print(f"Pendiente: {'Sí' if reunion.get('pendiente', False) else 'No'}")
+        print("-" * 45)
+        
+        if reunion.get('pendiente', False):
+            respuesta = input("¿Desea marcar esta reunión como atendida? (s/n): ")
+            if respuesta.lower() == 's':
+                reunion['pendiente'] = False
+                print("Reunión marcada como atendida.")
 
 def ver_pendientes():
-    print("Función pendientes")
+    print("--- ELEMENTOS PENDIENTES ---")
+    
+    hay_pendientes = False
+
+    print("\n[ Reuniones Pendientes ]")
+    for reunion in reuniones:
+        if reunion.get('pendiente', False):
+            hay_pendientes = True
+            print(f"ID: {reunion['id']} | Asunto: {reunion['asunto']} | Fecha: {reunion['fecha']} {reunion['hora']}")
+
+    print("\n[ Urgencias Pendientes ]")
+    for urgente in urgentes:
+        if urgente.get('pendiente', False):
+            hay_pendientes = True
+            print(f"ID: {urgente['id']} | Remitente: {urgente['remitente']} | Asunto: {urgente['asunto']}")
+
+    if not hay_pendientes:
+        print("No hay tareas ni reuniones pendientes.")
 
 
 def administrar_almacenamiento():
