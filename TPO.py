@@ -293,16 +293,16 @@ def almacen_mails():
         opcion = int(input("\nIngrese el ID del mail que desea ver (o '0' para salir): "))
 
 def comparar_clientes_productos():
+    print("\n--- Comparar Clientes y Productos ---")
+    print("1. Comparar clientes")
+    print("2. Comparar productos")
+    print("3. Productos más solicitados")
+    print("4. Clientes más frecuentes")
+    print("0. Salir")
+    opcion = input("Elija una opción: ")
     while True:
-        print("\n--- Comparar Clientes y Productos ---")
-        print("1. Comparar clientes")
-        print("2. Comparar productos")
-        print("3. Productos más solicitados")
-        print("4. Clientes más frecuentes")
-        print("0. Salir")
-        
-        opcion = input("Elija una opción: ")
 
+        
         if opcion == "0":
             break
 
@@ -644,127 +644,134 @@ def administrar_almacenamiento():
 def resumen_general():
     """Genera un panel de control con estadísticas generales de los mails."""
     
-    total_recibidos = len(mails)
-    pedidos = 0
-    reclamos = 0
-    cotizaciones = 0
+    salir = " "
+    while salir != "":
     
-    for mail in mails:
-        # Unimos asunto y contenido para buscar palabras clave en minúscula
-        texto = (mail["asunto"] + " " + mail["contenido"]).lower()
-        if "pedido" in texto or "compra" in texto:
-            pedidos += 1
-        if "reclamo" in texto or "problema" in texto or "queja" in texto:
-            reclamos += 1
-        if "cotización" in texto or "cotizacion" in texto or "presupuesto" in texto:
-            cotizaciones += 1
+        total_recibidos = len(mails)
+        pedidos = 0
+        reclamos = 0
+        cotizaciones = 0
+    
+        for mail in mails:
+            # Unimos asunto y contenido para buscar palabras clave en minúscula
+            texto = (mail["asunto"] + " " + mail["contenido"]).lower()
+            if "pedido" in texto or "compra" in texto:
+                pedidos += 1
+            if "reclamo" in texto or "problema" in texto or "queja" in texto:
+                reclamos += 1
+            if "cotización" in texto or "cotizacion" in texto or "presupuesto" in texto:
+                cotizaciones += 1
             
-    total_urgentes = len(urgentes)
+        total_urgentes = len(urgentes)
     
-    # Pendientes: contamos cuántos urgentes tienen su estado "pendiente" en True
-    total_pendientes = 0
-    for u in urgentes:
-        if u["pendiente"] == True:
-            total_pendientes += 1
+        # Pendientes: contamos cuántos urgentes tienen su estado "pendiente" en True
+        total_pendientes = 0
+        for u in urgentes:
+            if u["pendiente"] == True:
+                total_pendientes += 1
             
-    total_reuniones = len(reuniones)
+        total_reuniones = len(reuniones)
     
-    # 2. Cliente con mayor compra (Uso de listas paralelas e index)
-    nombres_c = []
-    compras_c = []
-    for c in clientes:
-        nombre = c["cliente"]
-        precio = c["precio"]
+        # 2. Cliente con mayor compra (Uso de listas paralelas e index)
+        nombres_c = []
+        compras_c = []
+        for c in clientes:
+            nombre = c["cliente"]
+            precio = c["precio"]
         
-        # Si el cliente ya está en la lista, le sumamos el precio
-        if nombre in nombres_c:
-            idx = nombres_c.index(nombre)
-            compras_c[idx] += precio
-        else:
-            # Si no está, lo agregamos como nuevo
-            nombres_c.append(nombre)
-            compras_c.append(precio)
-            
-    mejor_cliente = "No hay datos"
-    if len(nombres_c) > 0:
-        max_compra = max(compras_c)
-        idx_max = compras_c.index(max_compra)
-        mejor_cliente = nombres_c[idx_max]
-        
-    # 3. Producto más solicitado
-    nombres_p = []
-    cant_p = []
-    for c in clientes:
-        prod = c["producto"]
-        if prod != "No informado":
-            if prod in nombres_p:
-                idx = nombres_p.index(prod)
-                cant_p[idx] += 1
+            # Si el cliente ya está en la lista, le sumamos el precio
+            if nombre in nombres_c:
+                idx = nombres_c.index(nombre)
+                compras_c[idx] += precio
             else:
-                nombres_p.append(prod)
-                cant_p.append(1)
-                
-    producto_top = "No hay datos"
-    if len(nombres_p) > 0:
-        max_cant = max(cant_p)
-        idx_max = cant_p.index(max_cant)
-        producto_top = nombres_p[idx_max]
+                # Si no está, lo agregamos como nuevo
+                nombres_c.append(nombre)
+                compras_c.append(precio)
+            
+        mejor_cliente = "No hay datos"
+        if len(nombres_c) > 0:
+            max_compra = max(compras_c)
+            idx_max = compras_c.index(max_compra)
+            mejor_cliente = nombres_c[idx_max]
         
-    # 4. Cliente con más reclamos
-    nombres_r = []
-    cant_r = []
-    for mail in mails:
-        texto = (mail["asunto"] + " " + mail["contenido"]).lower()
-        if "reclamo" in texto or "problema" in texto or "queja" in texto:
-            # Extraemos el nombre antes del @
-            remitente = mail["remitente"].split("@")[0]
-            if remitente in nombres_r:
-                idx = nombres_r.index(remitente)
-                cant_r[idx] += 1
-            else:
-                nombres_r.append(remitente)
-                cant_r.append(1)
+        # 3. Producto más solicitado
+        nombres_p = []
+        cant_p = []
+        for c in clientes:
+            prod = c["producto"]
+            if prod != "No informado":
+                if prod in nombres_p:
+                    idx = nombres_p.index(prod)
+                    cant_p[idx] += 1
+                else:
+                    nombres_p.append(prod)
+                    cant_p.append(1)
                 
-    cliente_reclamos = "No hay datos"
-    if len(nombres_r) > 0:
-        max_r = max(cant_r)
-        idx_max = cant_r.index(max_r)
-        cliente_reclamos = nombres_r[idx_max]
+        producto_top = "No hay datos"
+        if len(nombres_p) > 0:
+            max_cant = max(cant_p)
+            idx_max = cant_p.index(max_cant)
+            producto_top = nombres_p[idx_max]
         
-    # 5. Próxima reunión
-    prox_reunion = "No hay reuniones programadas"
-    if len(reuniones) > 0:
-        r = reuniones[0] # Tomamos la primera de la lista
-        fecha_str = r["fecha"] if r["fecha"] else "fecha a confirmar"
-        hora_str = r["hora"] if r["hora"] else "hora a confirmar"
-        prox_reunion = f"{fecha_str} a las {hora_str}"
+        # 4. Cliente con más reclamos
+        nombres_r = []
+        cant_r = []
+        for mail in mails:
+            texto = (mail["asunto"] + " " + mail["contenido"]).lower()
+            if "reclamo" in texto or "problema" in texto or "queja" in texto:
+                # Extraemos el nombre antes del @
+                remitente = mail["remitente"].split("@")[0]
+                if remitente in nombres_r:
+                    idx = nombres_r.index(remitente)
+                    cant_r[idx] += 1
+                else:
+                    nombres_r.append(remitente)
+                    cant_r.append(1)
+                
+        cliente_reclamos = "No hay datos"
+        if len(nombres_r) > 0:
+            max_r = max(cant_r)
+            idx_max = cant_r.index(max_r)
+            cliente_reclamos = nombres_r[idx_max]
+        
+        # 5. Próxima reunión
+        prox_reunion = "No hay reuniones programadas"
+        if len(reuniones) > 0:
+            r = reuniones[0] # Tomamos la primera de la lista
+            fecha_str = r["fecha"] if r["fecha"] else "fecha a confirmar"
+            hora_str = r["hora"] if r["hora"] else "hora a confirmar"
+            prox_reunion = f"{fecha_str} a las {hora_str}"
 
-    # 6. Imprimir el panel usando f-strings para alinear a la derecha
-    print("\n" + "═" * 8 + " RESUMEN GENERAL " + "═" * 8)
-    print(f"\nMAILS RECIBIDOS: {total_recibidos:>14}")
+        # 6. Imprimir el panel usando f-strings para alinear a la derecha
+        print("\n" + "═" * 8 + " RESUMEN GENERAL " + "═" * 8)
+        print(f"\nMAILS RECIBIDOS: {total_recibidos:>14}")
     
-    print("\n" + f"PEDIDOS: {pedidos:>22}")
-    print(f"RECLAMOS: {reclamos:>21}")
-    print(f"COTIZACIONES: {cotizaciones:>17}")
+        print("\n" + f"PEDIDOS: {pedidos:>22}")
+        print(f"RECLAMOS: {reclamos:>21}")
+        print(f"COTIZACIONES: {cotizaciones:>17}")
     
-    print("\n" + f"🚨 URGENTES: {total_urgentes:>17}")
-    print(f"📋 PENDIENTES: {total_pendientes:>15}")
-    print(f"📅 PRÓXIMAS REUNIONES: {total_reuniones:>7}")
+        print("\n" + f"🚨 URGENTES: {total_urgentes:>17}")
+        print(f"📋 PENDIENTES: {total_pendientes:>15}")
+        print(f"📅 PRÓXIMAS REUNIONES: {total_reuniones:>7}")
     
-    print("\n" + "-" * 32)
-    print("CLIENTE CON MAYOR COMPRA:")
-    print(mejor_cliente.title()) 
+        print("\n" + "-" * 32)
+        print("CLIENTE CON MAYOR COMPRA:")
+        print(mejor_cliente.title()) 
     
-    print("\nPRODUCTO MÁS SOLICITADO:")
-    print(producto_top.capitalize())
-    
-    print("\nCLIENTE CON MÁS RECLAMOS:")
-    print(cliente_reclamos.title())
-    print("-" * 32)
-    
-    print(f"⚠ Hay {total_urgentes} asuntos urgentes")
-    print(f"⚠ Hay {total_pendientes} tareas pendientes")
-    print(f"📅 Próxima reunión: {prox_reunion}")
+        print("\nPRODUCTO MÁS SOLICITADO:")
+        print(producto_top)  
+        
+        print("\nCLIENTE CON MÁS RECLAMOS:")
+        print(cliente_reclamos.title())
+        print("-" * 32)
+        
+        print(f"⚠ Hay {total_urgentes} asuntos urgentes")
+        print(f"⚠ Hay {total_pendientes} tareas pendientes")
+        print(f"📅 Próxima reunión: {prox_reunion}")
+        
+        salir = input("\nPresione enter para salir: ")
+        while salir != "":
+            salir = input("Entrada inválida. Presione enter para salir: ")
 
 
 def main():
