@@ -58,7 +58,7 @@ mails_ejemplo = [
         "remitente": "ana@empresa.com",
         "asunto": "Reunión de equipo",
         "tipo": "reunión",
-        "contenido": "Remitente: ana@empresa.com \nAsunto: Reunión de equipo \n\nHola, \n\nNos juntamos mañana a las 10:00 AM con Joaquin y Romero para discutir el proyecto. \n\nSaludos."
+        "contenido": "Remitente: ana@empresa.com \nAsunto: Reunión de equipo \n\nHola, \n\nNos juntamos el dia 17/10/25 a las 10:00 AM con Joaquin y Romero para discutir el proyecto. \n\nSaludos."
     },
     {
         "id": 3,
@@ -66,6 +66,27 @@ mails_ejemplo = [
         "asunto": "Servidor detenido",
         "tipo": "urgente",
         "contenido": "Remitente: soporte@empresa.com \nAsunto: Servidor detenido \n\nEste problema es urgente y necesita atención inmediata. \n\nSaludos."
+    },
+    {
+        "id": 4,
+        "remitente": "maria@comercio.com",
+        "asunto": "Solicitud de presupuesto",
+        "tipo": "cliente",
+        "contenido": "Remitente: maria@comercio.com \nAsunto: Solicitud de presupuesto \n\nNecesitamos 5 unidades de monitor. \nEl precio total es de $500000. \n\nSaludos."
+    },
+    {
+        "id": 5,
+        "remitente": "lucas@empresa.com",
+        "asunto": "Reunion con el equipo",
+        "tipo": "reunion",
+        "contenido": "Remitente: lucas@empresa.com \nAsunto: Reunion con el equipo \n\nTenemos una reunion el dia 22/09/2026 a las 14:00 con Carla y Diego para revisar el proyecto. \n\nSaludos."
+    },
+    {
+        "id": 6,
+        "remitente": "alertas@empresa.com",
+        "asunto": "Falla critica del sistema",
+        "tipo": "urgente",
+        "contenido": "Remitente: alertas@empresa.com \nAsunto: Falla critica del sistema \n\nEl sistema presenta una falla urgente y requiere atencion inmediata. \n\nSaludos."
     }
 ]
 
@@ -278,7 +299,6 @@ def comparar_clientes_productos():
         print("2. Comparar productos")
         print("3. Productos más solicitados")
         print("4. Clientes más frecuentes")
-        print("5. Clientes con más reclamos")
         print("0. Salir")
         
         opcion = input("Elija una opción: ")
@@ -396,7 +416,7 @@ def comparar_clientes_productos():
         else:
             print("Opción inválida. Intente de nuevo.")
 
-        opcion = input(f"\n1. Comparar clientes\n2. Comparar productos\n 3.Productos mas solicitados \n 4. Clientes mas frecuentes\n5 clientes con mas reclamos\n 0. Salir\n")
+        opcion = input(f"\n1. Comparar clientes\n2. Comparar productos\n3.Productos mas solicitados \n4. Clientes mas frecuentes\n0. Salir\n")
     
 
 def ver_urgentes():
