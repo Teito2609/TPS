@@ -276,7 +276,29 @@ def comparar_clientes_productos():
 
 
 def ver_urgentes():
-    print("Función urgentes")
+    salir = " "
+    while salir != "":
+        print("--- LISTA DE URGENTES ---")
+        if not urgentes:
+            print("No hay urgencias registradas.")
+
+        for urgente in urgentes:
+            print("\n" + "-" * 45)
+            print(f"ID: {urgente['id']}")
+            print(f"Remitente: {urgente['remitente']}")
+            print(f"Asunto: {urgente['asunto']}")
+            print(f"Pendiente: {'Sí' if urgente.get('pendiente', False) else 'No'}")
+            print("-" * 45)
+
+            if urgente.get('pendiente', False):
+                respuesta = input("¿Desea marcar esta urgencia como atendida? (s/n): ")
+                if respuesta.lower() == 's':
+                    urgente['pendiente'] = False
+                    print("Urgencia marcada como atendida.")
+
+        salir = input("\nPresione enter para salir: ")
+        while salir != "":
+            salir = input("Entrada inválida. Presione enter para salir: ")
 
 
 def ver_reuniones():
