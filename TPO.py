@@ -3,97 +3,32 @@ clientes = []
 urgentes = []
 reuniones = []
 
-diccionario_urgente = {
-    "urgente": True,
-    "urgencia": True,
-    "inmediato": True,
-    "inmediata": True,
-    "prioridad": True
-}
+palabras_urgente = ["urgente", "urgencia", "inmediato", "inmediata", "prioridad"]
 
-diccionario_reunion = {
-    "reunión": True,
-    "reunion": True,
-    "junta": True,
-    "encuentro": True,
-    "videollamada": True
-}
-diccionario_cliente = {
-    "cliente": True,
-    "compra": True,
-    "pedido": True,
-    "presupuesto": True,
-    "cotización": True,
-    "cotizacion": True
-}
-diccionario_hora = {
-    "hora": True,
-    "horario": True,
-    "las": True
-}
-diccionario_empleados = {
-    "empleados": True,
-    "con": True,
-    "participantes": True,
-    "colaboradores": True
-}
-diccionario_producto = {
-    "producto": True,
-    "productos": True,
-    "artículo": True,
-    "articulos": True,
-    "mercancía": True
-}
+palabras_reunion = ["reunión", "reunion", "junta", "encuentro", "videollamada"]
+
+palabras_cliente = ["cliente", "compra", "pedido", "presupuesto", "cotización", "cotizacion"]
+
+palabras_hora = ["hora", "horario", "las"]
+
+palabras_empleados = ["empleados", "con", "participantes", "colaboradores"]
+
+palabras_producto = ["producto", "productos", "artículo", "articulos", "mercancía"]
 
 mails_ejemplo = [
-    {
-        "id": 1,
-        "remitente": "juan@gmail.com",
-        "asunto": "Pedido urgente de productos",
-        "tipo": "cliente",
-        "contenido": "Remitente: juan@gmail.com \nAsunto: Pedido urgente de productos \n\nHola, \n\nSoy Juan Pérez de la empresa ABC. \n\nNecesitamos 20 unidades de teclado y 10 unidades de mouse. \nEl precio total es de $150000. \n\nNecesitamos recibir el pedido el 15/09/2026. \n\nSaludos."
-    },
-    {
-        "id": 2,
-        "remitente": "ana@empresa.com",
-        "asunto": "Reunión de equipo",
-        "tipo": "reunión",
-        "contenido": "Remitente: ana@empresa.com \nAsunto: Reunión de equipo \n\nHola, \n\nNos juntamos el dia 17/10/25 a las 10:00 AM con Joaquin y Romero para discutir el proyecto. \n\nSaludos."
-    },
-    {
-        "id": 3,
-        "remitente": "soporte@empresa.com",
-        "asunto": "Servidor detenido",
-        "tipo": "urgente",
-        "contenido": "Remitente: soporte@empresa.com \nAsunto: Servidor detenido \n\nEste problema es urgente y necesita atención inmediata. \n\nSaludos."
-    },
-    {
-        "id": 4,
-        "remitente": "maria@comercio.com",
-        "asunto": "Solicitud de presupuesto",
-        "tipo": "cliente",
-        "contenido": "Remitente: maria@comercio.com \nAsunto: Solicitud de presupuesto \n\nNecesitamos 5 unidades de monitor. \nEl precio total es de $500000. \n\nSaludos."
-    },
-    {
-        "id": 5,
-        "remitente": "lucas@empresa.com",
-        "asunto": "Reunion con el equipo",
-        "tipo": "reunion",
-        "contenido": "Remitente: lucas@empresa.com \nAsunto: Reunion con el equipo \n\nTenemos una reunion el dia 22/09/2026 a las 14:00 con Carla y Diego para revisar el proyecto. \n\nSaludos."
-    },
-    {
-        "id": 6,
-        "remitente": "alertas@empresa.com",
-        "asunto": "Falla critica del sistema",
-        "tipo": "urgente",
-        "contenido": "Remitente: alertas@empresa.com \nAsunto: Falla critica del sistema \n\nEl sistema presenta una falla urgente y requiere atencion inmediata. \n\nSaludos."
-    }
+    "Remitente: juan@gmail.com \nAsunto: Pedido urgente de productos \n\nHola, \n\nSoy Juan Pérez de la empresa ABC. \n\nNecesitamos 20 unidades de teclado y 10 unidades de mouse. \nEl precio total es de $150000. \n\nNecesitamos recibir el pedido el 15/09/2026. \n\nSaludos.",
+    "Remitente: ana@empresa.com \nAsunto: Reunión de equipo \n\nHola, \n\nNos juntamos el dia 17/10/25 a las 10:00 AM con Joaquin y Romero para discutir el proyecto. \n\nSaludos.",
+    "Remitente: soporte@empresa.com \nAsunto: Servidor detenido \n\nEste problema es urgente y necesita atención inmediata. \n\nSaludos.",
+    "Remitente: maria@comercio.com \nAsunto: Solicitud de presupuesto \n\nNecesitamos 5 unidades de monitor. \nEl precio total es de $500000. \n\nSaludos.",
+    "Remitente: lucas@empresa.com \nAsunto: Reunion con el equipo \n\nTenemos una reunion el dia 22/09/2026 a las 14:00 con Carla y Diego para revisar el proyecto. \n\nSaludos.",
+    "Remitente: alertas@empresa.com \nAsunto: Falla critica del sistema \n\nEl sistema presenta una falla urgente y requiere atencion inmediata. \n\nSaludos."
 ]
 
-
+    
+    
 def cargar_mails_ejemplo():
-    for mail in mails_ejemplo:
-        guardar_y_analizar_mail(mail["contenido"])
+    for contenido in mails_ejemplo:
+        guardar_y_analizar_mail(contenido)
 
 
 def ingresar_mail_completo():
@@ -151,11 +86,11 @@ def guardar_y_analizar_mail(contenido=None):
             indice_asunto = palabras.index(palabra) + 1
             asunto = palabras[indice_asunto]
 
-        if palabra in diccionario_urgente and not palabra in diccionario_reunion and not palabra in diccionario_cliente:
+        if palabra in palabras_urgente and not palabra in palabras_reunion and not palabra in palabras_cliente:
             es_urgente = True
             tipo = "urgente"
 
-        if palabra in diccionario_reunion:
+        if palabra in palabras_reunion:
             es_reunion = True
             tipo = "reunión"
             
@@ -164,11 +99,11 @@ def guardar_y_analizar_mail(contenido=None):
             else:
                 fecha = ""
             
-            if palabra in diccionario_hora:
+            if palabra in palabras_hora:
                 indice_hora = palabras.index(palabra) + 1
                 hora = palabras[indice_hora]
             
-        if palabra in diccionario_cliente:
+        if palabra in palabras_cliente:
             es_cliente = True
             tipo = "cliente"  
         
@@ -203,7 +138,7 @@ def guardar_y_analizar_mail(contenido=None):
     }
 
     for indice, palabra in enumerate(palabras):
-        if palabra in diccionario_empleados:
+        if palabra in palabras_empleados:
             indice_empleado = indice + 1
             while indice_empleado < len(palabras):
                 empleado = palabras[indice_empleado].rstrip(".,")
